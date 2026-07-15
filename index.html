@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tradesperson — demo</title>
+<meta name="description" content="Interactive demo of the Tradesperson app prototype.">
+<!-- These two lines make 'Add to Home Screen' launch full-screen like a real app -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#293351">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ Design tokens — same as the Figma foundations ============ */
+:root{
+  --accent:#4A5FA6; --accent-dark:#3C4D87; --ink:#1A1F2E; --ink-soft:#595F73;
+  --tint:#F1F4FA; --navy:#293351; --navy-text:#C7CEE3; --green:#2E9E5B;
+  --green-dark:#21713F; --green-bg:#E5F4EA; --muted:#B6BCC9; --line:#E3E7F0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:"Inter",system-ui,sans-serif;color:var(--ink);
+  background:#3a3f4d; display:flex;justify-content:center;align-items:center;
+  -webkit-font-smoothing:antialiased;
+}
+/* The phone: a frame on desktop, the full screen on mobile */
+.phone{
+  position:relative;width:min(400px,100vw);height:min(860px,100dvh);
+  background:#fff;overflow:hidden;
+}
+@media(min-width:480px){.phone{border-radius:32px;box-shadow:0 24px 80px rgba(0,0,0,.5)}}
+
+/* ============ Screens ============ */
+.screen{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  background:#fff;overflow-y:auto;padding:56px 20px 24px;
+}
+.screen.active{display:flex;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.screen.active{animation:none}}
+
+.grow{flex:1}
+h1{font-size:26px;letter-spacing:-.02em}
+h2{font-size:22px;letter-spacing:-.02em}
+.sub{color:var(--ink-soft);font-size:14px;margin-top:6px}
+.small{font-size:12px;color:var(--ink-soft)}
+.caption{font-size:11px;color:var(--ink-soft)}
+.center{text-align:center}
+.mt{margin-top:14px}.mtl{margin-top:24px}
+
+/* Buttons */
+.btn{
+  display:block;width:100%;padding:14px 20px;border-radius:26px;border:none;
+  font:inherit;font-size:15px;font-weight:500;text-align:center;cursor:pointer;
+  color:#fff;background:var(--accent);margin-top:12px;
+}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:#fff;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.btn.ghost{background:none;color:var(--ink-soft);font-size:13px;box-shadow:none}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.link{color:var(--accent);font-weight:500;font-size:13px;cursor:pointer;background:none;border:none;font-family:inherit}
+
+/* Inputs (display-only in the demo) */
+.input{
+  width:100%;padding:13px 16px;border:1.5px solid #D5DBE8;border-radius:10px;
+  font-size:14px;color:#8C93A3;background:#fff;margin-top:10px;
+}
+.textarea{background:var(--tint);border:none;color:var(--ink);min-height:84px;border-radius:12px}
+
+/* Chips */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.chip{padding:7px 13px;border-radius:999px;background:var(--tint);color:var(--ink-soft);font-size:12px;font-weight:500}
+.chip.on{background:var(--accent);color:#fff}
+
+/* Cards */
+.card{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;background:#fff}
+.tintcard{background:var(--tint);border:none;border-radius:14px;padding:16px;margin-top:12px}
+.row{display:flex;align-items:center;gap:10px}
+.avatar{
+  flex-shrink:0;width:44px;height:44px;border-radius:50%;background:var(--tint);
+  color:var(--accent);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;
+}
+.avatar.big{width:72px;height:72px;font-size:24px}
+.name{font-size:15px;font-weight:500}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--tint);color:var(--accent);font-size:11px;font-weight:500;margin-top:3px}
+.badge.safe{background:var(--green-bg);color:var(--green-dark)}
+.status{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;margin-top:8px}
+.dot{width:9px;height:9px;border-radius:50%}
+.on .dot,.dot.on{background:var(--green)}.on{color:var(--green-dark)}
+.off .dot{background:var(--muted)}.off{color:var(--ink-soft)}
+
+/* Progress bar (trader signup) */
+.stepcap{font-size:11px;font-weight:500;color:var(--ink-soft);letter-spacing:.04em}
+.track{height:6px;border-radius:3px;background:#E5E9F2;margin-top:8px}
+.fill{height:6px;border-radius:3px;background:var(--accent)}
+
+/* Upload cards */
+.upload{border:1.5px dashed var(--accent);background:var(--tint);border-radius:12px;padding:20px 14px;text-align:center;margin-top:10px}
+.upload b{color:var(--accent);font-weight:500;font-size:14px}
+.upload.safe{border-color:var(--green);background:var(--green-bg)}
+.upload.safe b{color:var(--green-dark)}
+.upload .caption{margin-top:3px}
+
+/* Icon circle (success / waiting screens) */
+.bigicon{width:96px;height:96px;border-radius:50%;background:var(--tint);font-size:38px;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.bigicon.green{background:var(--green-bg);color:var(--green)}
+
+/* Search + toggle */
+.search{display:flex;align-items:center;gap:8px;background:var(--tint);border-radius:12px;padding:12px 14px;font-size:13px;color:#8C93A3;margin-top:12px}
+.vtoggle{display:flex;border:1.5px solid var(--accent);border-radius:999px;overflow:hidden;flex-shrink:0}
+.vtoggle span{padding:7px 16px;font-size:12px;font-weight:500;color:var(--accent);background:#fff;cursor:pointer}
+.vtoggle span.on{background:var(--accent);color:#fff}
+
+/* Map */
+.map{position:relative;flex:1;min-height:300px;background:#F2F0EB;border-radius:14px;overflow:hidden;margin-top:12px}
+.map .water{position:absolute;width:70%;height:45%;right:-20%;top:-18%;border-radius:50%;background:#BAD6F0}
+.map .park{position:absolute;border-radius:50%;background:#CBE3C6}
+.map .road{position:absolute;background:#fff;border-radius:6px;box-shadow:0 0 0 2px #D9D5CB}
+.map .road.major{background:#FFEC B3}
+.map .road.major{background:#FFECB3}
+.map .pin{
+  position:absolute;width:40px;height:40px;border-radius:50%;border:3px solid #fff;
+  color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  background:var(--green);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)
+}
+.map .pin.off{background:var(--muted)}
+.map .pin.home{background:var(--accent)}
+.map .route{position:absolute;border-left:4px dashed var(--accent);border-bottom:4px dashed var(--accent)}
+
+/* Tab bar */
+.tabs{
+  display:flex;justify-content:space-around;border-top:1px solid var(--line);
+  padding:10px 8px calc(14px + env(safe-area-inset-bottom));margin:16px -20px 0;background:#fff;
+}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--ink-soft);cursor:pointer;background:none;border:none;font-family:inherit}
+.tab .i{font-size:16px;color:var(--muted)}
+.tab.on{color:var(--accent);font-weight:500}
+.tab.on .i{color:var(--accent)}
+
+/* Toggle switch */
+.switch{width:52px;height:30px;border-radius:15px;background:var(--green);position:relative;flex-shrink:0;cursor:pointer}
+.switch::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
+.switch.offsw{background:#77809b}
+.switch.offsw::after{right:25px}
+
+/* Misc */
+.banner{background:var(--green-bg);color:var(--green-dark);font-size:12px;font-weight:500;border-radius:10px;padding:10px 14px;margin-top:12px;cursor:pointer}
+.otp{display:flex;gap:12px;margin-top:16px}
+.otp span{width:56px;height:60px;border-radius:12px;background:var(--tint);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+.otp span:first-child{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.stars{font-size:30px;color:#F2B534;letter-spacing:6px;margin-top:14px}
+.billrow{display:flex;justify-content:space-between;font-size:13px;margin-top:8px;color:var(--ink-soft)}
+.billrow.total{font-weight:700;color:var(--ink);border-top:1px solid #dfe4ee;padding-top:8px}
+.steps{margin-top:12px}
+.steps .s{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:14px;color:var(--ink-soft)}
+.steps .s .dot{width:13px;height:13px;background:#D9DEEB}
+.steps .s.done{color:var(--ink)}.steps .s.done .dot{background:var(--green)}
+.steps .s.cur{color:var(--ink);font-weight:700}.steps .s.cur .dot{background:var(--accent)}
+.splash{background:var(--navy);color:#fff;align-items:center;justify-content:center}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
+.dots i{width:8px;height:8px;border-radius:50%;background:#D9DEEB}
+.dots i.on{background:var(--accent)}
+.setrow{display:flex;align-items:center;gap:12px;border:1px solid #E7EAF1;border-radius:12px;padding:13px 14px;margin-top:8px;font-size:14px}
+.setrow .grow{flex:1}
+.seccap{font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:18px}
+.msg{max-width:75%;padding:11px 14px;border-radius:16px;font-size:13px;margin-top:10px;background:var(--tint)}
+.msg.mine{background:var(--accent);color:#fff;margin-left:auto}
+.msgtime{font-size:10px;color:#8C93A3;margin-top:3px}
+.msgtime.mine{text-align:right}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<!-- ================= SPLASH ================= -->
+<section class="screen splash active" id="splash">
+  <div style="font-size:32px;font-weight:700">Tradesperson</div>
+  <div style="color:var(--navy-text);font-size:14px;margin-top:8px">Real help, right now</div>
+</section>
+
+<!-- ================= INTROS ================= -->
+<section class="screen center" id="intro1">
+  <div class="bigicon mtl" style="width:200px;height:170px;border-radius:20px;font-size:56px">🔧</div>
+  <h2 class="mtl">Help in minutes</h2>
+  <p class="sub">See available plumbers and electricians near you and book instantly — no quote forms, no waiting days.</p>
+  <div class="dots"><i class="on"></i><i></i><i></i></div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="intro2">Next</button>
+  <button class="btn ghost" data-nav="role">Skip</button>
+</section>
+
+<section class="screen center" id="intro2">
+  <div class="bigicon mtl" style="width:200px;height:170px;border-radius:20px;font-size:56px">📍</div>
+  <h2 class="mtl">Track your pro live</h2>
+  <p class="sub">Watch your tradesperson head your way on the map, with a live arrival time.</p>
+  <div class="dots"><i></i><i class="on"></i><i></i></div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="intro3">Next</button>
+  <button class="btn ghost" data-nav="role">Skip</button>
+</section>
+
+<section class="screen center" id="intro3">
+  <div class="bigicon mtl" style="width:200px;height:170px;border-radius:20px;font-size:56px">🧾</div>
+  <h2 class="mtl">Pay when it's done</h2>
+  <p class="sub">Secure in-app payment and a digital invoice the moment the job's finished.</p>
+  <div class="dots"><i></i><i></i><i class="on"></i></div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="role">Get started</button>
+  <button class="btn ghost" data-nav="role">Skip</button>
+</section>
+
+<!-- ================= ROLE ================= -->
+<section class="screen center" id="role">
+  <h1 class="mtl">Choose your role</h1>
+  <p class="sub">You can switch or add a role later in settings.</p>
+  <div class="bigicon mtl" style="width:180px;height:150px;border-radius:20px;font-size:48px">🏠⚡</div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="csign">I need a tradesperson</button>
+  <button class="btn sec" data-nav="t1">I'm a tradesperson</button>
+  <button class="link mt" data-nav="login">Already have an account? Log in</button>
+</section>
+
+<!-- ================= LOG IN ================= -->
+<section class="screen" id="login">
+  <h1 class="mtl">Welcome back</h1>
+  <p class="sub">Log in to book a pro or manage your jobs.</p>
+  <div class="input">Email or mobile number</div>
+  <div class="input">Password</div>
+  <button class="link mt" style="text-align:left">Forgot password?</button>
+  <button class="btn" data-nav="home">Log in</button>
+  <button class="btn sec" data-nav="cotp">Text me a one-time code instead</button>
+  <div class="grow"></div>
+  <p class="small center">New here? <button class="link" data-nav="role">Create an account</button></p>
+</section>
+
+<!-- ================= CUSTOMER SIGN UP ================= -->
+<section class="screen" id="csign">
+  <h2 class="mtl">Create your account</h2>
+  <p class="sub">Book trusted local pros in minutes.</p>
+  <div class="input">Full name</div>
+  <div class="input">Email address</div>
+  <div class="input">Mobile number</div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="cotp">Continue</button>
+  <p class="caption center mt">By continuing you agree to our Terms and Privacy Policy.</p>
+</section>
+
+<section class="screen" id="cotp">
+  <h2 class="mtl">Check your phone</h2>
+  <p class="sub">We've texted a 4-digit code to 07 ••• ••• 431.</p>
+  <div class="otp"><span>4</span><span></span><span></span><span></span></div>
+  <button class="link mt" style="text-align:left">Didn't get a code? Resend</button>
+  <div class="grow"></div>
+  <button class="btn" data-nav="cdone">Verify</button>
+</section>
+
+<section class="screen center" id="cdone">
+  <div class="grow"></div>
+  <div class="bigicon green">✓</div>
+  <h2 class="mtl">You're all set</h2>
+  <p class="sub">Let's find you a tradesperson.</p>
+  <div class="grow"></div>
+  <button class="btn" data-nav="home">Find a tradesperson</button>
+</section>
+
+<!-- ================= CUSTOMER HOME (list) ================= -->
+<section class="screen" id="home">
+  <div class="row" style="justify-content:space-between">
+    <h2>Who do you need?</h2>
+    <div class="vtoggle"><span class="on">List</span><span data-nav="mapv">Map</span></div>
+  </div>
+  <div class="search">🔍 Search trade or postcode</div>
+  <div class="chips"><span class="chip on">All</span><span class="chip">Plumbers</span><span class="chip">Electricians</span></div>
+
+  <div class="card" data-nav="profile" style="cursor:pointer">
+    <div class="row">
+      <div class="avatar">SM</div>
+      <div><div class="name">Sandy MacLeod</div><div class="small">Electrician · IV51 · ★ 4.9</div></div>
+    </div>
+    <div class="row" style="gap:6px"><span class="status on"><span class="dot"></span>Available now</span><span class="badge safe">✓ Safety-checked</span></div>
+  </div>
+  <div class="card">
+    <div class="row">
+      <div class="avatar">MH</div>
+      <div><div class="name">Morag Henderson</div><div class="small">Plumber · IV51 · ★ 4.8</div></div>
+    </div>
+    <div class="row" style="gap:6px"><span class="status on"><span class="dot"></span>Available now</span><span class="badge safe">✓ Safety-checked</span></div>
+  </div>
+  <div class="card">
+    <div class="row">
+      <div class="avatar">DC</div>
+      <div><div class="name">Dougie Cameron</div><div class="small">Plumber · AB39 · ★ 4.7</div></div>
+    </div>
+    <span class="status off"><span class="dot"></span>Offline</span>
+  </div>
+
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab on"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
+    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= MAP VIEW ================= -->
+<section class="screen" id="mapv">
+  <div class="row" style="justify-content:space-between">
+    <h2>Near you</h2>
+    <div class="vtoggle"><span data-nav="home">List</span><span class="on">Map</span></div>
+  </div>
+  <div class="map">
+    <div class="water"></div>
+    <div class="park" style="width:110px;height:80px;left:6%;top:55%"></div>
+    <div class="park" style="width:70px;height:54px;left:55%;top:10%"></div>
+    <div class="road major" style="left:-5%;top:30%;width:110%;height:12px"></div>
+    <div class="road" style="left:-5%;top:66%;width:110%;height:7px"></div>
+    <div class="road" style="left:28%;top:-5%;width:6px;height:110%"></div>
+    <div class="road" style="left:72%;top:-5%;width:6px;height:110%"></div>
+    <div class="pin" style="left:14%;top:16%" data-nav="profile">SM</div>
+    <div class="pin" style="left:50%;top:44%" data-nav="profile">MH</div>
+    <div class="pin off" style="left:76%;top:76%">DC</div>
+  </div>
+  <div class="card" data-nav="profile" style="cursor:pointer">
+    <div class="row">
+      <div class="avatar">SM</div>
+      <div><div class="name">Sandy MacLeod</div><div class="small">Electrician · IV51 · 1.2 mi away · ★ 4.9</div></div>
+    </div>
+    <div class="row" style="gap:6px"><span class="status on"><span class="dot"></span>Available now</span><span class="badge safe">✓ Safety-checked</span></div>
+  </div>
+  <nav class="tabs">
+    <button class="tab on"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
+    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= TRADER PROFILE ================= -->
+<section class="screen" id="profile">
+  <button class="link" style="text-align:left" data-nav="home">← Back</button>
+  <div class="row mt">
+    <div class="avatar big">SM</div>
+    <div>
+      <h2>Sandy MacLeod</h2>
+      <div class="small">Electrician · ★ 4.9 (127 jobs)</div>
+      <span class="status on"><span class="dot"></span>Available now</span>
+    </div>
+  </div>
+  <div class="chips">
+    <span class="badge">✓ ID verified</span><span class="badge safe">✓ Safety-checked</span><span class="badge">✓ NICEIC</span>
+  </div>
+  <p class="sub">20 years rewiring crofts, B&amp;Bs and everything in between across Skye. EV chargers, fuse boards, full rewires.</p>
+  <div class="tintcard">
+    <div class="billrow"><span style="color:var(--ink);font-weight:500">Covers</span><span>IV51, IV55, IV56</span></div>
+    <div class="billrow"><span style="color:var(--ink);font-weight:500">Callout</span><span>From £45 · free quote first</span></div>
+    <div class="billrow"><span style="color:var(--ink);font-weight:500">Responds</span><span>Usually within 10 minutes</span></div>
+  </div>
+  <div class="card">
+    <div class="small" style="color:var(--ink);font-weight:500">★★★★★ · 2 days ago</div>
+    <p class="small mt" style="margin-top:6px">"Fuse board died on a Sunday evening — Sandy was here within the hour. Cannot fault him."</p>
+  </div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="job">Request booking</button>
+</section>
+
+<!-- ================= DESCRIBE THE JOB ================= -->
+<section class="screen" id="job">
+  <h2 class="mtl">What's the problem?</h2>
+  <p class="small">Booking Sandy MacLeod · Electrician · IV51</p>
+  <div class="chips"><span class="chip on">Emergency — now</span><span class="chip">Today</span><span class="chip">This week</span></div>
+  <div class="chips"><span class="chip">Sockets</span><span class="chip on">Fuse box</span><span class="chip">Lighting</span><span class="chip">Rewire</span></div>
+  <div class="input textarea mt">Half the sockets in the kitchen just died, fuse box keeps tripping…</div>
+  <div class="row mt" style="gap:8px">
+    <div class="upload" style="width:72px;height:72px;padding:0;display:flex;align-items:center;justify-content:center;margin:0">📷</div>
+    <div style="width:72px;height:72px;border-radius:10px;background:var(--tint)"></div>
+    <div style="width:72px;height:72px;border-radius:10px;background:var(--tint)"></div>
+  </div>
+  <p class="caption mt">Add a photo — it helps Sandy bring the right parts.</p>
+  <div class="tintcard" style="background:var(--green-bg)">
+    <div class="row" style="justify-content:space-between">
+      <span class="small" style="color:var(--green-dark);font-weight:500">Instant estimate</span>
+      <b style="color:var(--green-dark);font-size:18px">£120–£190</b>
+    </div>
+    <p class="caption" style="margin-top:4px">Based on fuse box jobs near IV51. Sandy confirms the final price before any work starts — no obligation.</p>
+  </div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="waiting">Send request</button>
+</section>
+
+<!-- ================= WAITING ================= -->
+<section class="screen center" id="waiting">
+  <div class="grow"></div>
+  <div class="bigicon" data-nav="noresp" title="Demo: tap for the no-answer path">⏱</div>
+  <h2 class="mtl">Request sent to Sandy</h2>
+  <p class="sub">Tradespeople usually respond within a few minutes. We'll notify you the second Sandy accepts.</p>
+  <p class="caption mtl" style="color:var(--muted)">Demo: accepts automatically · tap the clock for the no-answer path</p>
+  <div class="grow"></div>
+</section>
+
+<!-- ================= NO ONE ACCEPTED ================= -->
+<section class="screen center" id="noresp">
+  <div class="grow"></div>
+  <div class="bigicon">😕</div>
+  <h2 class="mtl">Sandy couldn't take this one</h2>
+  <p class="sub">No response in 5 minutes — but Morag is available now and covers your area.</p>
+  <div class="card" style="text-align:left">
+    <div class="row">
+      <div class="avatar">MH</div>
+      <div><div class="name">Morag Henderson</div><div class="small">Plumber · IV51 · 0.8 mi · ★ 4.8</div></div>
+    </div>
+    <span class="status on"><span class="dot"></span>Available now</span>
+  </div>
+  <button class="btn" data-nav="tracking">Send request to Morag</button>
+  <button class="btn sec" data-nav="tracking">Ask all available pros at once</button>
+  <button class="btn ghost" data-nav="home">Back to search</button>
+  <div class="grow"></div>
+  <p class="caption">Your job details carry over — no need to retype anything.</p>
+</section>
+
+<!-- ================= LIVE TRACKING ================= -->
+<section class="screen" id="tracking" style="padding-left:0;padding-right:0;padding-bottom:0">
+  <div style="padding:0 20px">
+    <div class="banner" data-nav="pay">✓ Sandy accepted — on his way &nbsp;<span class="caption">(demo: tap when done)</span></div>
+  </div>
+  <div class="map" style="border-radius:0;margin-top:12px">
+    <div class="water"></div>
+    <div class="park" style="width:90px;height:70px;left:8%;top:50%"></div>
+    <div class="road major" style="left:-5%;top:32%;width:110%;height:12px"></div>
+    <div class="road" style="left:-5%;top:68%;width:110%;height:7px"></div>
+    <div class="road" style="left:30%;top:-5%;width:6px;height:110%"></div>
+    <div class="road" style="left:70%;top:-5%;width:6px;height:110%"></div>
+    <div class="route" style="left:18%;top:18%;width:44%;height:46%"></div>
+    <div class="pin" style="left:11%;top:11%">🚐</div>
+    <div class="pin home" style="left:58%;top:60%">🏠</div>
+  </div>
+  <div style="padding:14px 20px calc(20px + env(safe-area-inset-bottom));background:#fff">
+    <div class="row">
+      <div class="avatar">SM</div>
+      <div class="grow"><div class="name">Sandy MacLeod</div><div class="small">Arriving in ~22 min · silver Transit</div></div>
+    </div>
+    <div class="row mt" style="gap:8px">
+      <button class="btn sec" style="margin:0;background:var(--tint);box-shadow:none" data-nav="chat">💬 Message</button>
+      <button class="btn sec" style="margin:0;background:var(--tint);box-shadow:none">📞 Call</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHAT ================= -->
+<section class="screen" id="chat">
+  <div class="row">
+    <button class="link" data-nav="tracking">←</button>
+    <div class="avatar" style="width:40px;height:40px;font-size:13px">SM</div>
+    <div><div class="name">Sandy MacLeod</div><span class="status on" style="margin-top:0"><span class="dot"></span>On the way · 22 min</span></div>
+  </div>
+  <div class="center mt"><span class="chip">Fuse box — emergency · IV51</span></div>
+  <div class="msg">Hi Aisha — on my way. Has the whole board tripped or just one row?</div>
+  <div class="msgtime">Sandy · 14:22</div>
+  <div class="msg mine">Just the bottom row I think — the switch won't stay up when I flip it</div>
+  <div class="msgtime mine">You · 14:23</div>
+  <div class="msg">Perfect, that helps. See you soon 👍</div>
+  <div class="msgtime">Sandy · 14:24</div>
+  <div class="grow"></div>
+  <div class="row" style="gap:8px">
+    <div class="search grow" style="margin:0">Message Sandy…</div>
+    <div class="avatar" style="background:var(--accent);color:#fff">➤</div>
+  </div>
+</section>
+
+<!-- ================= PAY ================= -->
+<section class="screen" id="pay">
+  <h2 class="mtl">Job complete</h2>
+  <p class="sub">Sandy has marked the job as finished.</p>
+  <div class="tintcard">
+    <div class="billrow"><span>Callout</span><span>£45.00</span></div>
+    <div class="billrow"><span>Labour (1.5 hrs)</span><span>£82.50</span></div>
+    <div class="billrow"><span>Parts — RCD unit</span><span>£38.00</span></div>
+    <div class="billrow total"><span>Total</span><span>£165.50</span></div>
+  </div>
+  <div class="setrow mt">💳<span class="grow" style="font-weight:500">Visa ending 4231</span><span class="link">Change</span></div>
+  <p class="caption mt">Your invoice lands in the app and your email automatically.</p>
+  <div class="grow"></div>
+  <button class="btn" data-nav="rate">Pay £165.50</button>
+</section>
+
+<!-- ================= RATE ================= -->
+<section class="screen center" id="rate">
+  <div class="grow"></div>
+  <div class="avatar big" style="margin:0 auto">SM</div>
+  <h2 class="mtl">How was Sandy?</h2>
+  <div class="stars">★ ★ ★ ★ ★</div>
+  <div class="input textarea mt" style="text-align:left">Anything Sandy should know? (optional)</div>
+  <p class="caption mt">Sandy rates you too — respect goes both ways.</p>
+  <div class="grow"></div>
+  <button class="btn" data-nav="home">Submit rating</button>
+</section>
+
+<!-- ================= BOOKINGS ================= -->
+<section class="screen" id="bookings">
+  <h2 class="mtl">Your bookings</h2>
+  <div class="vtoggle mt" style="align-self:flex-start"><span class="on">Active</span><span>History</span></div>
+  <div class="card" style="border-color:var(--green)" data-nav="tracking">
+    <span class="badge safe">In progress</span>
+    <div class="name mt" style="margin-top:8px">Fuse box — Sandy MacLeod</div>
+    <div class="small">Arriving in ~22 min · silver Transit</div>
+    <button class="link mt" style="text-align:left;padding:0">Track live →</button>
+  </div>
+  <div class="card">
+    <span class="badge">Scheduled</span>
+    <div class="name" style="margin-top:8px">Radiator bleed — Morag Henderson</div>
+    <div class="small">Thursday 10:00 · IV51 · est. £60–£90</div>
+  </div>
+  <p class="caption center mtl">Completed jobs move to History with their invoices.</p>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab" data-nav="home"><span class="i">⌂</span>Home</button>
+    <button class="tab on"><span class="i">▤</span>Bookings</button>
+    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= TRADER SIGN UP ================= -->
+<section class="screen" id="t1">
+  <div class="stepcap mtl">TRADESPERSON SIGN-UP · STEP 1 OF 4</div>
+  <div class="track"><div class="fill" style="width:25%"></div></div>
+  <h2 class="mt">About you</h2>
+  <div class="input">Full name</div>
+  <div class="input">Email address</div>
+  <div class="input">Mobile number</div>
+  <div class="input">Business name (optional)</div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="t2">Continue</button>
+</section>
+
+<section class="screen" id="t2">
+  <div class="stepcap mtl">TRADESPERSON SIGN-UP · STEP 2 OF 4</div>
+  <div class="track"><div class="fill" style="width:50%"></div></div>
+  <h2 class="mt">Your trade &amp; patch</h2>
+  <p class="small mt" style="font-weight:500;color:var(--ink)">Select your trade</p>
+  <div class="chips"><span class="chip">Plumber</span><span class="chip on">Electrician</span><span class="chip">Both</span></div>
+  <div class="input">Postcode districts you cover (e.g. AB39, AB12)</div>
+  <p class="caption mt">Customers only see you for jobs inside your patch.</p>
+  <div class="grow"></div>
+  <button class="btn" data-nav="t3">Continue</button>
+</section>
+
+<section class="screen" id="t3">
+  <div class="stepcap mtl">TRADESPERSON SIGN-UP · STEP 3 OF 4</div>
+  <div class="track"><div class="fill" style="width:75%"></div></div>
+  <h2 class="mt">Your certifications</h2>
+  <p class="small mt">Upload what applies to your trade. This is what earns the verified badge customers look for.</p>
+  <div class="upload"><b>⬆ Gas Safe registration</b><div class="caption">Plumbers working on gas — photo or PDF</div></div>
+  <div class="upload"><b>⬆ NICEIC / NAPIT certificate</b><div class="caption">Electricians — photo or PDF</div></div>
+  <div class="upload"><b>⬆ Public liability insurance</b><div class="caption">Required for all trades</div></div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="t4">Continue</button>
+</section>
+
+<section class="screen" id="t4">
+  <div class="stepcap mtl">TRADESPERSON SIGN-UP · STEP 4 OF 4</div>
+  <div class="track"><div class="fill" style="width:100%"></div></div>
+  <h2 class="mt">Verify your identity</h2>
+  <p class="small mt">Customers are letting you into their homes — verified ID is how we earn their trust for you.</p>
+  <div class="upload"><b>⬆ Photo ID</b><div class="caption">Passport or driving licence</div></div>
+  <div class="upload"><b>⬆ Selfie check</b><div class="caption">A quick photo to match your ID</div></div>
+  <div class="upload safe"><b>⬆ Basic DBS certificate (optional)</b><div class="caption">Earns the Safety-checked badge on your profile</div></div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="treview">Submit for review</button>
+</section>
+
+<section class="screen center" id="treview">
+  <div class="grow"></div>
+  <div class="bigicon">⏳</div>
+  <h2 class="mtl">We're checking your details</h2>
+  <p class="sub">Verification usually takes 1–2 working days. We'll text you the moment you're approved.</p>
+  <div class="grow"></div>
+  <button class="btn sec" data-nav="tdash">Preview my dashboard</button>
+</section>
+
+<!-- ================= TRADER DASHBOARD ================= -->
+<section class="screen" id="tdash">
+  <h2 class="mtl">Afternoon, Sandy</h2>
+  <div class="tintcard" style="background:var(--navy);color:#fff">
+    <div class="row">
+      <div class="grow">
+        <div style="font-weight:700;font-size:16px">You're online</div>
+        <div class="caption" style="color:var(--navy-text)">Taking jobs in IV51, IV55, IV56</div>
+      </div>
+      <div class="switch" id="availSwitch"></div>
+    </div>
+  </div>
+  <div class="row mt" style="gap:10px">
+    <div class="tintcard grow center" style="margin:0"><b style="font-size:18px">£265</b><div class="caption">Today</div></div>
+    <div class="tintcard grow center" style="margin:0"><b style="font-size:18px">3</b><div class="caption">Jobs done</div></div>
+    <div class="tintcard grow center" style="margin:0"><b style="font-size:18px">4.9★</b><div class="caption">Rating</div></div>
+  </div>
+  <div class="card" style="background:var(--green-bg);border-color:var(--green);cursor:pointer" data-nav="treq">
+    <div class="row" style="justify-content:space-between">
+      <span class="small" style="color:var(--green-dark);font-weight:700">● New request — Emergency</span>
+      <b style="color:var(--green-dark)">0:42</b>
+    </div>
+    <p class="small" style="margin-top:6px">Fuse box tripping · IV51 · 1.2 mi away · est. £120–£190</p>
+    <p class="small" style="color:var(--green-dark);font-weight:500;margin-top:6px">Tap to view →</p>
+  </div>
+  <p class="small mt" style="font-weight:500;color:var(--ink)">Today</p>
+  <div class="setrow"><b style="font-size:13px">09:30</b><span class="grow small">Boiler socket — Mrs Grant, IV51</span><span style="color:var(--green)">✓</span></div>
+  <div class="setrow"><b style="font-size:13px">13:00</b><span class="grow small">EV charger quote — B&amp;B Portree</span><span style="color:var(--green)">✓</span></div>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab on"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="tearn"><span class="i">▤</span>Earnings</button>
+    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= INCOMING REQUEST ================= -->
+<section class="screen" id="treq">
+  <div class="row mtl" style="justify-content:space-between">
+    <span class="small">Respond within</span><b style="font-size:22px;color:var(--accent)" id="countdown">0:42</b>
+  </div>
+  <h2 class="mt">Emergency — fuse box</h2>
+  <div class="row mt">
+    <div class="avatar">AK</div>
+    <div><div class="name">Aisha K.</div><div class="small">IV51 · 1.2 mi away · ★ 5.0 customer</div></div>
+  </div>
+  <div class="tintcard">
+    <p class="small" style="color:var(--ink)">"Half the sockets in the kitchen just died, fuse box keeps tripping…"</p>
+    <div class="row mt" style="gap:6px">
+      <div style="width:56px;height:56px;border-radius:8px;background:#D9DEEB"></div>
+      <div style="width:56px;height:56px;border-radius:8px;background:#D9DEEB"></div>
+    </div>
+  </div>
+  <div class="tintcard" style="background:var(--green-bg)">
+    <div class="row" style="justify-content:space-between">
+      <span class="caption" style="color:var(--green-dark)">Customer saw estimate</span>
+      <b style="color:var(--green-dark)">£120–£190</b>
+    </div>
+  </div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="tactive">Accept job</button>
+  <button class="btn sec" data-nav="tdash">Decline</button>
+</section>
+
+<!-- ================= ACTIVE JOB ================= -->
+<section class="screen" id="tactive">
+  <div class="banner" style="cursor:default">Job accepted — Aisha can see you're on your way</div>
+  <h2 class="mt">Fuse box — Aisha K.</h2>
+  <div class="tintcard">
+    <div style="font-weight:500;font-size:14px">14 Quay Brae, Portree IV51 9DE</div>
+    <button class="btn" style="padding:10px;font-size:13px">🧭 Navigate</button>
+  </div>
+  <div class="steps">
+    <div class="s done"><span class="dot"></span>Accepted</div>
+    <div class="s cur"><span class="dot"></span>On my way</div>
+    <div class="s"><span class="dot"></span>Arrived</div>
+    <div class="s"><span class="dot"></span>Job complete</div>
+  </div>
+  <div class="row mt" style="gap:8px">
+    <button class="btn sec grow" style="margin:0;background:var(--tint);box-shadow:none" data-nav="chat">💬 Message Aisha</button>
+    <button class="btn sec grow" style="margin:0;background:var(--tint);box-shadow:none">📞 Call</button>
+  </div>
+  <div class="grow"></div>
+  <button class="btn" data-nav="trate">Mark job complete</button>
+</section>
+
+<!-- ================= TRADER RATES CUSTOMER ================= -->
+<section class="screen center" id="trate">
+  <div class="grow"></div>
+  <div class="avatar big" style="margin:0 auto">AK</div>
+  <h2 class="mtl">How was Aisha?</h2>
+  <p class="small">Job: fuse box replacement · £165.50 · paid ✓</p>
+  <div class="stars">★ ★ ★ ★ ★</div>
+  <div class="chips" style="justify-content:center"><span class="chip on">Clear brief</span><span class="chip">Easy access</span><span class="chip">On time</span></div>
+  <p class="caption mt">Ratings keep the platform fair for both sides.</p>
+  <div class="grow"></div>
+  <button class="btn" data-nav="tearn">Submit rating</button>
+</section>
+
+<!-- ================= EARNINGS ================= -->
+<section class="screen" id="tearn">
+  <h2 class="mtl">Earnings</h2>
+  <div class="tintcard" style="background:var(--navy);color:#fff" data-nav="tdash">
+    <div class="caption" style="color:var(--navy-text)">This week</div>
+    <div style="font-size:30px;font-weight:700">£1,240.50</div>
+    <div class="caption" style="color:var(--navy-text)">Paid out every Friday · next payout in 2 days</div>
+  </div>
+  <div class="tintcard row" style="align-items:flex-end;gap:10px;height:130px">
+    <div class="grow center"><div style="height:40px;background:var(--accent);border-radius:6px"></div><div class="caption">M</div></div>
+    <div class="grow center"><div style="height:64px;background:var(--accent);border-radius:6px"></div><div class="caption">T</div></div>
+    <div class="grow center"><div style="height:30px;background:var(--accent);border-radius:6px"></div><div class="caption">W</div></div>
+    <div class="grow center"><div style="height:88px;background:var(--green);border-radius:6px"></div><div class="caption">T</div></div>
+    <div class="grow center"><div style="height:56px;background:var(--accent);border-radius:6px"></div><div class="caption">F</div></div>
+    <div class="grow center"><div style="height:96px;background:var(--green);border-radius:6px"></div><div class="caption">S</div></div>
+    <div class="grow center"><div style="height:20px;background:var(--accent);border-radius:6px"></div><div class="caption">S</div></div>
+  </div>
+  <p class="small mt" style="font-weight:500;color:var(--ink)">Recent invoices</p>
+  <div class="setrow"><span class="grow"><b style="font-size:13px">Aisha K. — fuse box</b><div class="caption">Today · invoice sent automatically</div></span><b>£165.50</b></div>
+  <div class="setrow"><span class="grow"><b style="font-size:13px">Mrs Grant — boiler socket</b><div class="caption">Today · invoice sent automatically</div></span><b>£72.00</b></div>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab" data-nav="tdash"><span class="i">⌂</span>Home</button>
+    <button class="tab on"><span class="i">▤</span>Earnings</button>
+    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section class="screen" id="settings">
+  <h2 class="mtl">Settings</h2>
+  <div class="tintcard row">
+    <div class="avatar" style="background:#fff">SM</div>
+    <div class="grow"><div class="name">Sandy MacLeod</div><div class="small">Electrician · Verified ✓</div></div>
+    <span class="link">Edit</span>
+  </div>
+  <div class="seccap">ACCOUNT</div>
+  <div class="setrow">👤<span class="grow">Account details</span><span class="small">›</span></div>
+  <div class="setrow">💳<span class="grow">Payments &amp; payouts</span><span class="small">›</span></div>
+  <div class="setrow">📄<span class="grow">Certifications &amp; DBS</span><span class="small">›</span></div>
+  <div class="seccap">PREFERENCES</div>
+  <div class="setrow">🔔<span class="grow">Job alerts</span><div class="switch" style="width:40px;height:22px"></div></div>
+  <div class="setrow">📍<span class="grow">Share live location on jobs</span><div class="switch" style="width:40px;height:22px"></div></div>
+  <div class="seccap">SUPPORT</div>
+  <div class="setrow">❓<span class="grow">Help &amp; support</span><span class="small">›</span></div>
+  <div class="setrow">⚖️<span class="grow">Terms &amp; privacy</span><span class="small">›</span></div>
+  <button class="btn" style="background:#FAEDED;color:#CD4747" data-nav="splashreset">Log out</button>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab" data-nav="home"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
+    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
+    <button class="tab on"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* ============================================================
+   Navigation engine — the same idea as the Figma prototype:
+   every element with data-nav="screenId" navigates on tap.
+   One listener on the whole app (event delegation, same
+   pattern as directory.js).
+   ============================================================ */
+const screens = document.querySelectorAll(".screen");
+let timers = [];
+
+function show(id) {
+  // Any pending auto-advance timers die when we change screen,
+  // otherwise an old timer could yank the user somewhere unexpected.
+  timers.forEach(clearTimeout);
+  timers = [];
+
+  if (id === "splashreset") id = "splash"; // "Log out" restarts the demo
+
+  screens.forEach(s => s.classList.toggle("active", s.id === id));
+  document.querySelector(".phone").scrollTop = 0;
+
+  // Auto-advances — the moments that make the demo feel alive
+  if (id === "splash")  timers.push(setTimeout(() => show("intro1"), 1500));
+  if (id === "waiting") timers.push(setTimeout(() => show("tracking"), 2500));
+  if (id === "treq")    startCountdown();
+}
+
+document.addEventListener("click", e => {
+  const target = e.target.closest("[data-nav]");
+  if (target) show(target.dataset.nav);
+});
+
+/* Trader request countdown — pure theatre, but effective theatre */
+function startCountdown() {
+  let secs = 42;
+  const el = document.getElementById("countdown");
+  const tick = setInterval(() => {
+    secs--;
+    if (secs < 0 || !document.getElementById("treq").classList.contains("active")) {
+      clearInterval(tick);
+      return;
+    }
+    el.textContent = "0:" + String(secs).padStart(2, "0");
+  }, 1000);
+}
+
+/* The availability toggle on the trader dashboard actually flips */
+const sw = document.getElementById("availSwitch");
+sw.addEventListener("click", e => {
+  e.stopPropagation();
+  sw.classList.toggle("offsw");
+  const label = sw.parentElement.querySelector("div div");
+  const cap = sw.parentElement.querySelector(".caption");
+  const off = sw.classList.contains("offsw");
+  label.textContent = off ? "You're offline" : "You're online";
+  cap.textContent = off ? "Not taking jobs right now" : "Taking jobs in IV51, IV55, IV56";
+});
+
+/* Kick off */
+show("splash");
+</script>
+</body>
+</html>
