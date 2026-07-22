@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tradesperson — demo</title>
 <meta name="description" content="Interactive demo of the Tradesperson app prototype.">
-<!-- These two lines make 'Add to Home Screen' launch full-screen like a real app -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#293351">
@@ -23,21 +22,13 @@
 html,body{height:100%}
 body{
   font-family:"Inter",system-ui,sans-serif;color:var(--ink);
-  background:#3a3f4d; display:flex;justify-content:center;align-items:center;
+  background:#3a3f4d;display:flex;justify-content:center;align-items:center;
   -webkit-font-smoothing:antialiased;
 }
-/* The phone: a frame on desktop, the full screen on mobile */
-.phone{
-  position:relative;width:min(400px,100vw);height:min(860px,100dvh);
-  background:#fff;overflow:hidden;
-}
+.phone{position:relative;width:min(400px,100vw);height:min(860px,100dvh);background:#fff;overflow:hidden}
 @media(min-width:480px){.phone{border-radius:32px;box-shadow:0 24px 80px rgba(0,0,0,.5)}}
 
-/* ============ Screens ============ */
-.screen{
-  position:absolute;inset:0;display:none;flex-direction:column;
-  background:#fff;overflow-y:auto;padding:56px 20px 24px;
-}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:#fff;overflow-y:auto;padding:56px 20px 24px}
 .screen.active{display:flex;animation:fadein .25s ease}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.screen.active{animation:none}}
@@ -51,38 +42,25 @@ h2{font-size:22px;letter-spacing:-.02em}
 .center{text-align:center}
 .mt{margin-top:14px}.mtl{margin-top:24px}
 
-/* Buttons */
-.btn{
-  display:block;width:100%;padding:14px 20px;border-radius:26px;border:none;
-  font:inherit;font-size:15px;font-weight:500;text-align:center;cursor:pointer;
-  color:#fff;background:var(--accent);margin-top:12px;
-}
+.btn{display:block;width:100%;padding:14px 20px;border-radius:26px;border:none;font:inherit;font-size:15px;font-weight:500;text-align:center;cursor:pointer;color:#fff;background:var(--accent);margin-top:12px}
 .btn:active{transform:scale(.98)}
 .btn.sec{background:#fff;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
 .btn.ghost{background:none;color:var(--ink-soft);font-size:13px;box-shadow:none}
 .btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .link{color:var(--accent);font-weight:500;font-size:13px;cursor:pointer;background:none;border:none;font-family:inherit}
 
-/* Inputs (display-only in the demo) */
-.input{
-  width:100%;padding:13px 16px;border:1.5px solid #D5DBE8;border-radius:10px;
-  font-size:14px;color:#8C93A3;background:#fff;margin-top:10px;
-}
+.input{width:100%;padding:13px 16px;border:1.5px solid #D5DBE8;border-radius:10px;font-size:14px;color:#8C93A3;background:#fff;margin-top:10px}
 .textarea{background:var(--tint);border:none;color:var(--ink);min-height:84px;border-radius:12px}
 
-/* Chips */
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .chip{padding:7px 13px;border-radius:999px;background:var(--tint);color:var(--ink-soft);font-size:12px;font-weight:500}
 .chip.on{background:var(--accent);color:#fff}
 
-/* Cards */
 .card{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;background:#fff}
+.card.live{border-color:var(--green);border-width:1.5px}
 .tintcard{background:var(--tint);border:none;border-radius:14px;padding:16px;margin-top:12px}
 .row{display:flex;align-items:center;gap:10px}
-.avatar{
-  flex-shrink:0;width:44px;height:44px;border-radius:50%;background:var(--tint);
-  color:var(--accent);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;
-}
+.avatar{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:var(--tint);color:var(--accent);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center}
 .avatar.big{width:72px;height:72px;font-size:24px}
 .name{font-size:15px;font-weight:500}
 .badge{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--tint);color:var(--accent);font-size:11px;font-weight:500;margin-top:3px}
@@ -92,61 +70,54 @@ h2{font-size:22px;letter-spacing:-.02em}
 .on .dot,.dot.on{background:var(--green)}.on{color:var(--green-dark)}
 .off .dot{background:var(--muted)}.off{color:var(--ink-soft)}
 
-/* Progress bar (trader signup) */
 .stepcap{font-size:11px;font-weight:500;color:var(--ink-soft);letter-spacing:.04em}
 .track{height:6px;border-radius:3px;background:#E5E9F2;margin-top:8px}
 .fill{height:6px;border-radius:3px;background:var(--accent)}
 
-/* Upload cards */
 .upload{border:1.5px dashed var(--accent);background:var(--tint);border-radius:12px;padding:20px 14px;text-align:center;margin-top:10px}
 .upload b{color:var(--accent);font-weight:500;font-size:14px}
 .upload.safe{border-color:var(--green);background:var(--green-bg)}
 .upload.safe b{color:var(--green-dark)}
 .upload .caption{margin-top:3px}
 
-/* Icon circle (success / waiting screens) */
 .bigicon{width:96px;height:96px;border-radius:50%;background:var(--tint);font-size:38px;display:flex;align-items:center;justify-content:center;margin:0 auto}
 .bigicon.green{background:var(--green-bg);color:var(--green)}
 
-/* Search + toggle */
 .search{display:flex;align-items:center;gap:8px;background:var(--tint);border-radius:12px;padding:12px 14px;font-size:13px;color:#8C93A3;margin-top:12px}
 .vtoggle{display:flex;border:1.5px solid var(--accent);border-radius:999px;overflow:hidden;flex-shrink:0}
 .vtoggle span{padding:7px 16px;font-size:12px;font-weight:500;color:var(--accent);background:#fff;cursor:pointer}
 .vtoggle span.on{background:var(--accent);color:#fff}
 
-/* Map */
+/* Segmented control (bookings / jobs) */
+.seg{display:flex;background:var(--tint);border-radius:999px;padding:4px;margin-top:14px}
+.seg span{flex:1;text-align:center;padding:7px 0;border-radius:999px;font-size:12px;color:var(--ink-soft);cursor:pointer}
+.seg span.on{background:#fff;color:var(--ink);font-weight:500}
+
 .map{position:relative;flex:1;min-height:300px;background:#F2F0EB;border-radius:14px;overflow:hidden;margin-top:12px}
 .map .water{position:absolute;width:70%;height:45%;right:-20%;top:-18%;border-radius:50%;background:#BAD6F0}
 .map .park{position:absolute;border-radius:50%;background:#CBE3C6}
 .map .road{position:absolute;background:#fff;border-radius:6px;box-shadow:0 0 0 2px #D9D5CB}
-.map .road.major{background:#FFEC B3}
 .map .road.major{background:#FFECB3}
-.map .pin{
-  position:absolute;width:40px;height:40px;border-radius:50%;border:3px solid #fff;
-  color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;
-  background:var(--green);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)
-}
+.map .pin{position:absolute;width:40px;height:40px;border-radius:50%;border:3px solid #fff;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;background:var(--green);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .map .pin.off{background:var(--muted)}
 .map .pin.home{background:var(--accent)}
 .map .route{position:absolute;border-left:4px dashed var(--accent);border-bottom:4px dashed var(--accent)}
 
-/* Tab bar */
-.tabs{
-  display:flex;justify-content:space-around;border-top:1px solid var(--line);
-  padding:10px 8px calc(14px + env(safe-area-inset-bottom));margin:16px -20px 0;background:#fff;
-}
+.tabs{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:10px 8px calc(14px + env(safe-area-inset-bottom));margin:16px -20px 0;background:#fff}
 .tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--ink-soft);cursor:pointer;background:none;border:none;font-family:inherit}
 .tab .i{font-size:16px;color:var(--muted)}
 .tab.on{color:var(--accent);font-weight:500}
 .tab.on .i{color:var(--accent)}
 
-/* Toggle switch */
-.switch{width:52px;height:30px;border-radius:15px;background:var(--green);position:relative;flex-shrink:0;cursor:pointer}
+.switch{width:52px;height:30px;border-radius:15px;background:var(--green);position:relative;flex-shrink:0;cursor:pointer;transition:background-color .2s}
 .switch::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
 .switch.offsw{background:#77809b}
 .switch.offsw::after{right:25px}
+.switch.sm{width:40px;height:22px}
+.switch.sm::after{width:16px;height:16px}
+.switch.sm.offsw{background:#C7CCD9}
+.switch.sm.offsw::after{right:21px}
 
-/* Misc */
 .banner{background:var(--green-bg);color:var(--green-dark);font-size:12px;font-weight:500;border-radius:10px;padding:10px 14px;margin-top:12px;cursor:pointer}
 .otp{display:flex;gap:12px;margin-top:16px}
 .otp span{width:56px;height:60px;border-radius:12px;background:var(--tint);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
@@ -165,6 +136,7 @@ h2{font-size:22px;letter-spacing:-.02em}
 .dots i.on{background:var(--accent)}
 .setrow{display:flex;align-items:center;gap:12px;border:1px solid #E7EAF1;border-radius:12px;padding:13px 14px;margin-top:8px;font-size:14px}
 .setrow .grow{flex:1}
+.setrow.tap{cursor:pointer}
 .seccap{font-size:11px;font-weight:500;color:var(--ink-soft);margin-top:18px}
 .msg{max-width:75%;padding:11px 14px;border-radius:16px;font-size:13px;margin-top:10px;background:var(--tint)}
 .msg.mine{background:var(--accent);color:#fff;margin-left:auto}
@@ -174,6 +146,21 @@ h2{font-size:22px;letter-spacing:-.02em}
 </head>
 <body>
 <div class="phone">
+
+<!-- ============================================================
+     ROLE-SPECIFIC SCREENS
+
+     Every screen below belongs to exactly ONE side of the
+     marketplace and carries the tab bar for that side:
+
+       customer tabs → Home · Bookings · Messages · Profile
+       trader tabs   → Home · Jobs · Messages · Profile
+
+     That is the fix for v1's bugs. Previously chat, bookings and
+     settings were single "shared" screens wired into both flows,
+     so a tradesperson tapping Messages or Profile fell into the
+     customer's app — and the tab bar there had no route back.
+     ============================================================ -->
 
 <!-- ================= SPLASH ================= -->
 <section class="screen splash active" id="splash">
@@ -212,7 +199,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn ghost" data-nav="role">Skip</button>
 </section>
 
-<!-- ================= ROLE ================= -->
+<!-- ================= ROLE FORK ================= -->
 <section class="screen center" id="role">
   <h1 class="mtl">Choose your role</h1>
   <p class="sub">You can switch or add a role later in settings.</p>
@@ -236,7 +223,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <p class="small center">New here? <button class="link" data-nav="role">Create an account</button></p>
 </section>
 
-<!-- ================= CUSTOMER SIGN UP ================= -->
+<!-- ================= CUSTOMER — SIGN UP ================= -->
 <section class="screen" id="csign">
   <h2 class="mtl">Create your account</h2>
   <p class="sub">Book trusted local pros in minutes.</p>
@@ -266,7 +253,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn" data-nav="home">Find a tradesperson</button>
 </section>
 
-<!-- ================= CUSTOMER HOME (list) ================= -->
+<!-- ================= CUSTOMER — HOME ================= -->
 <section class="screen" id="home">
   <div class="row" style="justify-content:space-between">
     <h2>Who do you need?</h2>
@@ -301,12 +288,12 @@ h2{font-size:22px;letter-spacing:-.02em}
   <nav class="tabs">
     <button class="tab on"><span class="i">⌂</span>Home</button>
     <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
-    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
-    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+    <button class="tab" data-nav="cinbox"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="csettings"><span class="i">●</span>Profile</button>
   </nav>
 </section>
 
-<!-- ================= MAP VIEW ================= -->
+<!-- ================= CUSTOMER — MAP ================= -->
 <section class="screen" id="mapv">
   <div class="row" style="justify-content:space-between">
     <h2>Near you</h2>
@@ -334,14 +321,14 @@ h2{font-size:22px;letter-spacing:-.02em}
   <nav class="tabs">
     <button class="tab on"><span class="i">⌂</span>Home</button>
     <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
-    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
-    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+    <button class="tab" data-nav="cinbox"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="csettings"><span class="i">●</span>Profile</button>
   </nav>
 </section>
 
-<!-- ================= TRADER PROFILE ================= -->
+<!-- ================= CUSTOMER — TRADER PROFILE ================= -->
 <section class="screen" id="profile">
-  <button class="link" style="text-align:left" data-nav="home">← Back</button>
+  <button class="link" style="text-align:left" data-back>← Back</button>
   <div class="row mt">
     <div class="avatar big">SM</div>
     <div>
@@ -361,13 +348,13 @@ h2{font-size:22px;letter-spacing:-.02em}
   </div>
   <div class="card">
     <div class="small" style="color:var(--ink);font-weight:500">★★★★★ · 2 days ago</div>
-    <p class="small mt" style="margin-top:6px">"Fuse board died on a Sunday evening — Sandy was here within the hour. Cannot fault him."</p>
+    <p class="small" style="margin-top:6px">"Fuse board died on a Sunday evening — Sandy was here within the hour. Cannot fault him."</p>
   </div>
   <div class="grow"></div>
   <button class="btn" data-nav="job">Request booking</button>
 </section>
 
-<!-- ================= DESCRIBE THE JOB ================= -->
+<!-- ================= CUSTOMER — DESCRIBE THE JOB ================= -->
 <section class="screen" id="job">
   <h2 class="mtl">What's the problem?</h2>
   <p class="small">Booking Sandy MacLeod · Electrician · IV51</p>
@@ -391,7 +378,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn" data-nav="waiting">Send request</button>
 </section>
 
-<!-- ================= WAITING ================= -->
+<!-- ================= CUSTOMER — WAITING ================= -->
 <section class="screen center" id="waiting">
   <div class="grow"></div>
   <div class="bigicon" data-nav="noresp" title="Demo: tap for the no-answer path">⏱</div>
@@ -401,7 +388,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <div class="grow"></div>
 </section>
 
-<!-- ================= NO ONE ACCEPTED ================= -->
+<!-- ================= CUSTOMER — NO ONE ACCEPTED ================= -->
 <section class="screen center" id="noresp">
   <div class="grow"></div>
   <div class="bigicon">😕</div>
@@ -421,7 +408,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <p class="caption">Your job details carry over — no need to retype anything.</p>
 </section>
 
-<!-- ================= LIVE TRACKING ================= -->
+<!-- ================= CUSTOMER — LIVE TRACKING ================= -->
 <section class="screen" id="tracking" style="padding-left:0;padding-right:0;padding-bottom:0">
   <div style="padding:0 20px">
     <div class="banner" data-nav="pay">✓ Sandy accepted — on his way &nbsp;<span class="caption">(demo: tap when done)</span></div>
@@ -443,16 +430,52 @@ h2{font-size:22px;letter-spacing:-.02em}
       <div class="grow"><div class="name">Sandy MacLeod</div><div class="small">Arriving in ~22 min · silver Transit</div></div>
     </div>
     <div class="row mt" style="gap:8px">
-      <button class="btn sec" style="margin:0;background:var(--tint);box-shadow:none" data-nav="chat">💬 Message</button>
+      <button class="btn sec" style="margin:0;background:var(--tint);box-shadow:none" data-nav="cchat">💬 Message</button>
       <button class="btn sec" style="margin:0;background:var(--tint);box-shadow:none">📞 Call</button>
     </div>
   </div>
 </section>
 
-<!-- ================= CHAT ================= -->
-<section class="screen" id="chat">
+<!-- ================= CUSTOMER — MESSAGES (inbox) ================= -->
+<section class="screen" id="cinbox">
+  <h2 class="mtl">Messages</h2>
+  <div class="card live" data-nav="cchat" style="cursor:pointer">
+    <div class="row" style="align-items:flex-start">
+      <div class="avatar">SM</div>
+      <div class="grow">
+        <div class="row" style="justify-content:space-between">
+          <span class="name">Sandy MacLeod</span><span class="caption">14:24</span>
+        </div>
+        <div class="small">Perfect, that helps. See you soon 👍</div>
+        <span class="badge safe">Active job</span>
+      </div>
+    </div>
+  </div>
+  <div class="card" data-nav="cchat" style="cursor:pointer">
+    <div class="row" style="align-items:flex-start">
+      <div class="avatar">MH</div>
+      <div class="grow">
+        <div class="row" style="justify-content:space-between">
+          <span class="name">Morag Henderson</span><span class="caption">Yesterday</span>
+        </div>
+        <div class="small">Thursday at 10 works fine for me.</div>
+      </div>
+    </div>
+  </div>
+  <p class="caption mt">Messages stay attached to the job they belong to.</p>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab" data-nav="home"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
+    <button class="tab on"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="csettings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= CUSTOMER — CHAT ================= -->
+<section class="screen" id="cchat">
   <div class="row">
-    <button class="link" data-nav="tracking">←</button>
+    <button class="link" data-back>←</button>
     <div class="avatar" style="width:40px;height:40px;font-size:13px">SM</div>
     <div><div class="name">Sandy MacLeod</div><span class="status on" style="margin-top:0"><span class="dot"></span>On the way · 22 min</span></div>
   </div>
@@ -470,7 +493,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   </div>
 </section>
 
-<!-- ================= PAY ================= -->
+<!-- ================= CUSTOMER — PAY ================= -->
 <section class="screen" id="pay">
   <h2 class="mtl">Job complete</h2>
   <p class="sub">Sandy has marked the job as finished.</p>
@@ -486,7 +509,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn" data-nav="rate">Pay £165.50</button>
 </section>
 
-<!-- ================= RATE ================= -->
+<!-- ================= CUSTOMER — RATE TRADER ================= -->
 <section class="screen center" id="rate">
   <div class="grow"></div>
   <div class="avatar big" style="margin:0 auto">SM</div>
@@ -498,15 +521,15 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn" data-nav="home">Submit rating</button>
 </section>
 
-<!-- ================= BOOKINGS ================= -->
+<!-- ================= CUSTOMER — BOOKINGS ================= -->
 <section class="screen" id="bookings">
   <h2 class="mtl">Your bookings</h2>
-  <div class="vtoggle mt" style="align-self:flex-start"><span class="on">Active</span><span>History</span></div>
-  <div class="card" style="border-color:var(--green)" data-nav="tracking">
+  <div class="seg"><span class="on">Active</span><span>History</span></div>
+  <div class="card live" data-nav="tracking" style="cursor:pointer">
     <span class="badge safe">In progress</span>
-    <div class="name mt" style="margin-top:8px">Fuse box — Sandy MacLeod</div>
+    <div class="name" style="margin-top:8px">Fuse box — Sandy MacLeod</div>
     <div class="small">Arriving in ~22 min · silver Transit</div>
-    <button class="link mt" style="text-align:left;padding:0">Track live →</button>
+    <div class="link" style="margin-top:8px">Track live →</div>
   </div>
   <div class="card">
     <span class="badge">Scheduled</span>
@@ -518,12 +541,42 @@ h2{font-size:22px;letter-spacing:-.02em}
   <nav class="tabs">
     <button class="tab" data-nav="home"><span class="i">⌂</span>Home</button>
     <button class="tab on"><span class="i">▤</span>Bookings</button>
-    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
-    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+    <button class="tab" data-nav="cinbox"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="csettings"><span class="i">●</span>Profile</button>
   </nav>
 </section>
 
-<!-- ================= TRADER SIGN UP ================= -->
+<!-- ================= CUSTOMER — SETTINGS ================= -->
+<section class="screen" id="csettings">
+  <h2 class="mtl">Settings</h2>
+  <div class="tintcard row">
+    <div class="avatar" style="background:#fff">AK</div>
+    <div class="grow"><div class="name">Aisha K.</div><div class="small">aisha.k@email.com</div></div>
+    <span class="link">Edit</span>
+  </div>
+  <div class="seccap">ACCOUNT</div>
+  <div class="setrow">👤<span class="grow">Account details</span><span class="small">›</span></div>
+  <div class="setrow">🏠<span class="grow">Saved addresses</span><span class="small">›</span></div>
+  <div class="setrow">💳<span class="grow">Payment methods</span><span class="small">›</span></div>
+  <div class="seccap">PREFERENCES</div>
+  <div class="setrow">🔔<span class="grow">Job updates</span><div class="switch sm"></div></div>
+  <div class="setrow">📍<span class="grow">Share location while a pro is on the way</span><div class="switch sm"></div></div>
+  <div class="seccap">SUPPORT</div>
+  <div class="setrow">❓<span class="grow">Help &amp; support</span><span class="small">›</span></div>
+  <div class="setrow">⚖️<span class="grow">Terms &amp; privacy</span><span class="small">›</span></div>
+  <!-- Delivers the promise made on the role screen: switch role later -->
+  <div class="setrow tap" data-nav="tdash">🔄<span class="grow">Switch to tradesperson view</span><span class="small">›</span></div>
+  <button class="btn" style="background:#FAEDED;color:#CD4747" data-nav="restart">Log out</button>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab" data-nav="home"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
+    <button class="tab" data-nav="cinbox"><span class="i">✉</span>Messages</button>
+    <button class="tab on"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= TRADER — SIGN UP ================= -->
 <section class="screen" id="t1">
   <div class="stepcap mtl">TRADESPERSON SIGN-UP · STEP 1 OF 4</div>
   <div class="track"><div class="fill" style="width:25%"></div></div>
@@ -581,24 +634,24 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn sec" data-nav="tdash">Preview my dashboard</button>
 </section>
 
-<!-- ================= TRADER DASHBOARD ================= -->
+<!-- ================= TRADER — DASHBOARD ================= -->
 <section class="screen" id="tdash">
   <h2 class="mtl">Afternoon, Sandy</h2>
   <div class="tintcard" style="background:var(--navy);color:#fff">
     <div class="row">
       <div class="grow">
-        <div style="font-weight:700;font-size:16px">You're online</div>
-        <div class="caption" style="color:var(--navy-text)">Taking jobs in IV51, IV55, IV56</div>
+        <div style="font-weight:700;font-size:16px" id="availTitle">You're online</div>
+        <div class="caption" style="color:var(--navy-text)" id="availSub">Taking jobs in IV51, IV55, IV56</div>
       </div>
       <div class="switch" id="availSwitch"></div>
     </div>
   </div>
   <div class="row mt" style="gap:10px">
-    <div class="tintcard grow center" style="margin:0"><b style="font-size:18px">£265</b><div class="caption">Today</div></div>
+    <div class="tintcard grow center" style="margin:0;cursor:pointer" data-nav="tearn"><b style="font-size:18px">£265</b><div class="caption">Today</div></div>
     <div class="tintcard grow center" style="margin:0"><b style="font-size:18px">3</b><div class="caption">Jobs done</div></div>
     <div class="tintcard grow center" style="margin:0"><b style="font-size:18px">4.9★</b><div class="caption">Rating</div></div>
   </div>
-  <div class="card" style="background:var(--green-bg);border-color:var(--green);cursor:pointer" data-nav="treq">
+  <div class="card live" style="background:var(--green-bg);cursor:pointer" data-nav="treq">
     <div class="row" style="justify-content:space-between">
       <span class="small" style="color:var(--green-dark);font-weight:700">● New request — Emergency</span>
       <b style="color:var(--green-dark)">0:42</b>
@@ -610,15 +663,16 @@ h2{font-size:22px;letter-spacing:-.02em}
   <div class="setrow"><b style="font-size:13px">09:30</b><span class="grow small">Boiler socket — Mrs Grant, IV51</span><span style="color:var(--green)">✓</span></div>
   <div class="setrow"><b style="font-size:13px">13:00</b><span class="grow small">EV charger quote — B&amp;B Portree</span><span style="color:var(--green)">✓</span></div>
   <div class="grow"></div>
+  <!-- TRADER tab bar: different second tab, and every destination is trader-side -->
   <nav class="tabs">
     <button class="tab on"><span class="i">⌂</span>Home</button>
-    <button class="tab" data-nav="tearn"><span class="i">▤</span>Earnings</button>
-    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
-    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+    <button class="tab" data-nav="tjobs"><span class="i">▤</span>Jobs</button>
+    <button class="tab" data-nav="tinbox"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="tsettings"><span class="i">●</span>Profile</button>
   </nav>
 </section>
 
-<!-- ================= INCOMING REQUEST ================= -->
+<!-- ================= TRADER — INCOMING REQUEST ================= -->
 <section class="screen" id="treq">
   <div class="row mtl" style="justify-content:space-between">
     <span class="small">Respond within</span><b style="font-size:22px;color:var(--accent)" id="countdown">0:42</b>
@@ -646,7 +700,7 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn sec" data-nav="tdash">Decline</button>
 </section>
 
-<!-- ================= ACTIVE JOB ================= -->
+<!-- ================= TRADER — ACTIVE JOB ================= -->
 <section class="screen" id="tactive">
   <div class="banner" style="cursor:default">Job accepted — Aisha can see you're on your way</div>
   <h2 class="mt">Fuse box — Aisha K.</h2>
@@ -661,14 +715,14 @@ h2{font-size:22px;letter-spacing:-.02em}
     <div class="s"><span class="dot"></span>Job complete</div>
   </div>
   <div class="row mt" style="gap:8px">
-    <button class="btn sec grow" style="margin:0;background:var(--tint);box-shadow:none" data-nav="chat">💬 Message Aisha</button>
+    <button class="btn sec grow" style="margin:0;background:var(--tint);box-shadow:none" data-nav="tchat">💬 Message Aisha</button>
     <button class="btn sec grow" style="margin:0;background:var(--tint);box-shadow:none">📞 Call</button>
   </div>
   <div class="grow"></div>
   <button class="btn" data-nav="trate">Mark job complete</button>
 </section>
 
-<!-- ================= TRADER RATES CUSTOMER ================= -->
+<!-- ================= TRADER — RATE CUSTOMER ================= -->
 <section class="screen center" id="trate">
   <div class="grow"></div>
   <div class="avatar big" style="margin:0 auto">AK</div>
@@ -681,10 +735,98 @@ h2{font-size:22px;letter-spacing:-.02em}
   <button class="btn" data-nav="tearn">Submit rating</button>
 </section>
 
-<!-- ================= EARNINGS ================= -->
+<!-- ================= TRADER — JOBS ================= -->
+<section class="screen" id="tjobs">
+  <h2 class="mtl">Your jobs</h2>
+  <div class="seg"><span class="on">Today</span><span>Upcoming</span><span>Completed</span></div>
+  <div class="card live" data-nav="tactive" style="cursor:pointer">
+    <span class="badge safe">In progress</span>
+    <div class="name" style="margin-top:8px">Fuse box — Aisha K.</div>
+    <div class="small">14 Quay Brae, Portree IV51 · started 14:20</div>
+    <div class="small" style="color:var(--green-dark);font-weight:500;margin-top:6px">Open job →</div>
+  </div>
+  <div class="setrow"><b style="font-size:13px">09:30</b>
+    <span class="grow"><b style="font-size:13px">Boiler socket — Mrs Grant</b><div class="caption">IV51 · completed</div></span>
+    <b style="font-size:13px">£72.00</b></div>
+  <div class="setrow"><b style="font-size:13px">13:00</b>
+    <span class="grow"><b style="font-size:13px">EV charger quote — B&amp;B Portree</b><div class="caption">IV51 · quote sent</div></span>
+    <b style="font-size:13px">—</b></div>
+  <p class="caption mt">Completed jobs keep their invoice attached.</p>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab" data-nav="tdash"><span class="i">⌂</span>Home</button>
+    <button class="tab on"><span class="i">▤</span>Jobs</button>
+    <button class="tab" data-nav="tinbox"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="tsettings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= TRADER — MESSAGES (inbox) ================= -->
+<section class="screen" id="tinbox">
+  <h2 class="mtl">Messages</h2>
+  <div class="card live" data-nav="tchat" style="cursor:pointer">
+    <div class="row" style="align-items:flex-start">
+      <div class="avatar">AK</div>
+      <div class="grow">
+        <div class="row" style="justify-content:space-between">
+          <span class="name">Aisha K.</span><span class="caption">14:23</span>
+        </div>
+        <div class="small">Just the bottom row I think — the switch…</div>
+        <span class="badge safe">Active job</span>
+      </div>
+    </div>
+  </div>
+  <div class="card" data-nav="tchat" style="cursor:pointer">
+    <div class="row" style="align-items:flex-start">
+      <div class="avatar">MG</div>
+      <div class="grow">
+        <div class="row" style="justify-content:space-between">
+          <span class="name">Mrs Grant</span><span class="caption">Yesterday</span>
+        </div>
+        <div class="small">Thanks again, all working perfectly.</div>
+      </div>
+    </div>
+  </div>
+  <p class="caption mt">Messages stay attached to the job they belong to.</p>
+  <div class="grow"></div>
+  <nav class="tabs">
+    <button class="tab" data-nav="tdash"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="tjobs"><span class="i">▤</span>Jobs</button>
+    <button class="tab on"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="tsettings"><span class="i">●</span>Profile</button>
+  </nav>
+</section>
+
+<!-- ================= TRADER — CHAT =================
+     The same conversation as the customer's chat screen, seen
+     from the other side: Sandy's messages are the blue ones now. -->
+<section class="screen" id="tchat">
+  <div class="row">
+    <button class="link" data-back>←</button>
+    <div class="avatar" style="width:40px;height:40px;font-size:13px">AK</div>
+    <div><div class="name">Aisha K.</div><span class="status on" style="margin-top:0"><span class="dot"></span>Job in progress · fuse box</span></div>
+  </div>
+  <div class="center mt"><span class="chip">Fuse box — emergency · IV51</span></div>
+  <div class="msg mine">Hi Aisha — on my way. Has the whole board tripped or just one row?</div>
+  <div class="msgtime mine">You · 14:22</div>
+  <div class="msg">Just the bottom row I think — the switch won't stay up when I flip it</div>
+  <div class="msgtime">Aisha · 14:23</div>
+  <div class="msg mine">Perfect, that helps. See you soon 👍</div>
+  <div class="msgtime mine">You · 14:24</div>
+  <div class="grow"></div>
+  <div class="row" style="gap:8px">
+    <div class="search grow" style="margin:0">Message Aisha…</div>
+    <div class="avatar" style="background:var(--accent);color:#fff">➤</div>
+  </div>
+</section>
+
+<!-- ================= TRADER — EARNINGS ================= -->
 <section class="screen" id="tearn">
-  <h2 class="mtl">Earnings</h2>
-  <div class="tintcard" style="background:var(--navy);color:#fff" data-nav="tdash">
+  <div class="row" style="justify-content:space-between">
+    <h2>Earnings</h2>
+    <button class="link" data-nav="tdash">Dashboard →</button>
+  </div>
+  <div class="tintcard" style="background:var(--navy);color:#fff">
     <div class="caption" style="color:var(--navy-text)">This week</div>
     <div style="font-size:30px;font-weight:700">£1,240.50</div>
     <div class="caption" style="color:var(--navy-text)">Paid out every Friday · next payout in 2 days</div>
@@ -704,14 +846,14 @@ h2{font-size:22px;letter-spacing:-.02em}
   <div class="grow"></div>
   <nav class="tabs">
     <button class="tab" data-nav="tdash"><span class="i">⌂</span>Home</button>
-    <button class="tab on"><span class="i">▤</span>Earnings</button>
-    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
-    <button class="tab" data-nav="settings"><span class="i">●</span>Profile</button>
+    <button class="tab" data-nav="tjobs"><span class="i">▤</span>Jobs</button>
+    <button class="tab" data-nav="tinbox"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="tsettings"><span class="i">●</span>Profile</button>
   </nav>
 </section>
 
-<!-- ================= SETTINGS ================= -->
-<section class="screen" id="settings">
+<!-- ================= TRADER — SETTINGS ================= -->
+<section class="screen" id="tsettings">
   <h2 class="mtl">Settings</h2>
   <div class="tintcard row">
     <div class="avatar" style="background:#fff">SM</div>
@@ -720,20 +862,21 @@ h2{font-size:22px;letter-spacing:-.02em}
   </div>
   <div class="seccap">ACCOUNT</div>
   <div class="setrow">👤<span class="grow">Account details</span><span class="small">›</span></div>
-  <div class="setrow">💳<span class="grow">Payments &amp; payouts</span><span class="small">›</span></div>
+  <div class="setrow tap" data-nav="tearn">💳<span class="grow">Payments &amp; payouts</span><span class="small">›</span></div>
   <div class="setrow">📄<span class="grow">Certifications &amp; DBS</span><span class="small">›</span></div>
   <div class="seccap">PREFERENCES</div>
-  <div class="setrow">🔔<span class="grow">Job alerts</span><div class="switch" style="width:40px;height:22px"></div></div>
-  <div class="setrow">📍<span class="grow">Share live location on jobs</span><div class="switch" style="width:40px;height:22px"></div></div>
+  <div class="setrow">🔔<span class="grow">Job alerts</span><div class="switch sm"></div></div>
+  <div class="setrow">📍<span class="grow">Share live location on jobs</span><div class="switch sm"></div></div>
   <div class="seccap">SUPPORT</div>
   <div class="setrow">❓<span class="grow">Help &amp; support</span><span class="small">›</span></div>
   <div class="setrow">⚖️<span class="grow">Terms &amp; privacy</span><span class="small">›</span></div>
-  <button class="btn" style="background:#FAEDED;color:#CD4747" data-nav="splashreset">Log out</button>
+  <div class="setrow tap" data-nav="home">🔄<span class="grow">Switch to customer view</span><span class="small">›</span></div>
+  <button class="btn" style="background:#FAEDED;color:#CD4747" data-nav="restart">Log out</button>
   <div class="grow"></div>
   <nav class="tabs">
-    <button class="tab" data-nav="home"><span class="i">⌂</span>Home</button>
-    <button class="tab" data-nav="bookings"><span class="i">▤</span>Bookings</button>
-    <button class="tab" data-nav="chat"><span class="i">✉</span>Messages</button>
+    <button class="tab" data-nav="tdash"><span class="i">⌂</span>Home</button>
+    <button class="tab" data-nav="tjobs"><span class="i">▤</span>Jobs</button>
+    <button class="tab" data-nav="tinbox"><span class="i">✉</span>Messages</button>
     <button class="tab on"><span class="i">●</span>Profile</button>
   </nav>
 </section>
@@ -742,32 +885,60 @@ h2{font-size:22px;letter-spacing:-.02em}
 
 <script>
 /* ============================================================
-   Navigation engine — the same idea as the Figma prototype:
-   every element with data-nav="screenId" navigates on tap.
-   One listener on the whole app (event delegation, same
-   pattern as directory.js).
+   Navigation engine
+
+   Two attributes drive the whole app:
+     data-nav="screenId"  → go to that screen
+     data-back            → return to the previous screen
+
+   Back needs a history stack rather than a hardcoded target,
+   because a chat can be opened from two places (the inbox, or
+   the live tracking screen) and back has to return to wherever
+   you actually came from. Hardcoding it sends people somewhere
+   they've never been — the same class of bug that let traders
+   fall into the customer app in v1.
    ============================================================ */
 const screens = document.querySelectorAll(".screen");
+const phone = document.querySelector(".phone");
+let current = null;
+const stack = [];
 let timers = [];
 
-function show(id) {
-  // Any pending auto-advance timers die when we change screen,
-  // otherwise an old timer could yank the user somewhere unexpected.
+function show(id, push = true) {
+  // Cancel pending auto-advances, or an old timer could yank the
+  // user off a screen they navigated to in the meantime.
   timers.forEach(clearTimeout);
   timers = [];
 
-  if (id === "splashreset") id = "splash"; // "Log out" restarts the demo
+  if (id === "restart") {          // "Log out" starts the demo over
+    stack.length = 0;
+    current = null;
+    id = "splash";
+    push = false;
+  }
+
+  if (push && current) stack.push(current);
+  current = id;
 
   screens.forEach(s => s.classList.toggle("active", s.id === id));
-  document.querySelector(".phone").scrollTop = 0;
+  phone.scrollTop = 0;
 
-  // Auto-advances — the moments that make the demo feel alive
-  if (id === "splash")  timers.push(setTimeout(() => show("intro1"), 1500));
-  if (id === "waiting") timers.push(setTimeout(() => show("tracking"), 2500));
+  // Auto-advances pass push:false — you can't go "back" to a splash
+  // screen, or to a waiting screen that has already resolved.
+  if (id === "splash")  timers.push(setTimeout(() => show("intro1", false), 1500));
+  if (id === "waiting") timers.push(setTimeout(() => show("tracking", false), 2500));
   if (id === "treq")    startCountdown();
 }
 
+function back() {
+  const previous = stack.pop();
+  if (previous) show(previous, false);
+}
+
+/* One listener for the whole app rather than one per button —
+   event delegation, the same pattern as the directory page. */
 document.addEventListener("click", e => {
+  if (e.target.closest("[data-back]")) { back(); return; }
   const target = e.target.closest("[data-nav]");
   if (target) show(target.dataset.nav);
 });
@@ -786,20 +957,27 @@ function startCountdown() {
   }, 1000);
 }
 
-/* The availability toggle on the trader dashboard actually flips */
-const sw = document.getElementById("availSwitch");
-sw.addEventListener("click", e => {
-  e.stopPropagation();
-  sw.classList.toggle("offsw");
-  const label = sw.parentElement.querySelector("div div");
-  const cap = sw.parentElement.querySelector(".caption");
-  const off = sw.classList.contains("offsw");
-  label.textContent = off ? "You're offline" : "You're online";
-  cap.textContent = off ? "Not taking jobs right now" : "Taking jobs in IV51, IV55, IV56";
+/* Every toggle flips when tapped. stopPropagation keeps the tap
+   from also firing a data-nav on the row behind it. */
+document.querySelectorAll(".switch").forEach(sw => {
+  sw.addEventListener("click", e => {
+    e.stopPropagation();
+    sw.classList.toggle("offsw");
+
+    // The dashboard's availability switch also rewrites its label —
+    // it's the one control the whole trader side hangs on.
+    if (sw.id === "availSwitch") {
+      const off = sw.classList.contains("offsw");
+      document.getElementById("availTitle").textContent = off ? "You're offline" : "You're online";
+      document.getElementById("availSub").textContent = off
+        ? "Not taking jobs right now"
+        : "Taking jobs in IV51, IV55, IV56";
+    }
+  });
 });
 
 /* Kick off */
-show("splash");
+show("splash", false);
 </script>
 </body>
 </html>
